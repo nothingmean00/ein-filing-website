@@ -28,24 +28,6 @@ const BlogImage = ({
   const [imageError, setImageError] = useState(false)
   const [imageLoaded, setImageLoaded] = useState(false)
 
-  // Function to get optimized image path
-  const getOptimizedSrc = (originalSrc: string) => {
-    // If the src already includes '/optimized/', use it as is
-    if (originalSrc.includes('/optimized/')) {
-      return originalSrc
-    }
-    
-    // If it's a root path and doesn't include optimized, try to get the optimized version
-    if (originalSrc.startsWith('/') && !originalSrc.includes('/optimized/')) {
-      const imageName = originalSrc.split('/').pop()
-      if (imageName && (imageName.includes('.png') || imageName.includes('.jpg') || imageName.includes('.jpeg'))) {
-        return `/optimized/${imageName}`
-      }
-    }
-    
-    return originalSrc
-  }
-
   // Function to get WebP version
   const getWebPSrc = (originalSrc: string) => {
     if (originalSrc.includes('/optimized/') && !originalSrc.includes('/webp/')) {
@@ -58,8 +40,15 @@ const BlogImage = ({
     return originalSrc
   }
 
-  const optimizedSrc = imageError ? src : getOptimizedSrc(src)
-  const webpSrc = getWebPSrc(optimizedSrc)
+  // Use the src as-is since blog data already has correct paths
+  const imageSrc = src
+  const webpSrc = getWebPSrc(imageSrc)
+  
+  // Debug logging
+  console.log('BlogImage rendering:', { src, imageSrc, webpSrc, imageError, imageLoaded })
+  
+  // Also try URL encoding the path for spaces
+  const encodedSrc = encodeURI(imageSrc)
 
   return (
     <div className={cn("relative overflow-hidden rounded-lg", className)}>
@@ -70,31 +59,27 @@ const BlogImage = ({
         </div>
       )}
       
-      <picture>
-        {/* WebP version for modern browsers */}
-        <source srcSet={webpSrc} type="image/webp" />
-        
-        {/* Fallback to optimized or original image */}
-        <Image
-          src={optimizedSrc}
-          alt={alt}
-          fill={fill}
-          width={!fill ? width : undefined}
-          height={!fill ? height : undefined}
-          sizes={sizes}
-          priority={priority}
-          className={cn("object-cover transition-opacity duration-300", {
-            "opacity-0": !imageLoaded && !imageError,
-            "opacity-100": imageLoaded || imageError
-          })}
-          quality={85}
-          onLoad={() => setImageLoaded(true)}
-          onError={() => {
-            setImageError(true)
-            setImageLoaded(true)
-          }}
-        />
-      </picture>
+      {/* Use regular Image component - Next.js handles optimization */}
+      <Image
+        src={encodedSrc}
+        alt={alt}
+        fill={fill}
+        width={!fill ? width : undefined}
+        height={!fill ? height : undefined}
+        sizes={sizes}
+        priority={priority}
+        className={cn("object-cover transition-opacity duration-300", {
+          "opacity-0": !imageLoaded && !imageError,
+          "opacity-100": imageLoaded || imageError
+        })}
+        quality={85}
+        onLoad={() => setImageLoaded(true)}
+                 onError={(e) => {
+           console.error('Image failed to load:', imageSrc, 'encoded:', encodedSrc, e)
+          setImageError(true)
+          setImageLoaded(true)
+        }}
+      />
     </div>
   )
 }
