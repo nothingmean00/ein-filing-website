@@ -1,0 +1,14 @@
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Image optimization
+Allow: /optimized/
+Allow: /optimized/webp/
+
+# Sitemap
+Sitemap: https://einationalfiling.com/sitemap.xml
+Sitemap: https://einationalfiling.com/sitemap-images.xml
+
+# Crawl delay
+Crawl-delay: 1
