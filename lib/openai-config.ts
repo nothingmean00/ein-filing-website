@@ -1,15 +1,26 @@
 // OpenAI Configuration
 import { OpenAI } from 'openai';
 
-// Initialize the OpenAI client with environment variables
-// IMPORTANT: Store your API key in environment variables, not in code
-const openaiApiKey = process.env.OPENAI_API_KEY || '';
+// Lazy initialization function to avoid build-time errors
+export const getOpenAIClient = () => {
+  const openaiApiKey = process.env.OPENAI_API_KEY;
+  
+  if (!openaiApiKey) {
+    throw new Error('OPENAI_API_KEY environment variable is not set');
+  }
 
-// Create OpenAI client instance
-export const openaiClient = new OpenAI({
-  apiKey: openaiApiKey,
-  dangerouslyAllowBrowser: false, // Only use server-side
-});
+  return new OpenAI({
+    apiKey: openaiApiKey,
+    dangerouslyAllowBrowser: false, // Only use server-side
+  });
+};
+
+// For backward compatibility
+export const openaiClient = {
+  get chat() {
+    return getOpenAIClient().chat;
+  }
+};
 
 // Chat completion configuration
 export const chatCompletionConfig = {
