@@ -1,7 +1,6 @@
 "use client"
 
 import Image from "next/image"
-import { useState } from "react"
 import { cn } from "@/lib/utils"
 
 interface BlogImageProps {
@@ -25,45 +24,24 @@ const BlogImage = ({
   width,
   height,
 }: BlogImageProps) => {
-  const [imageError, setImageError] = useState(false)
-  const [imageLoaded, setImageLoaded] = useState(false)
-
-  // Function to get WebP version
-  const getWebPSrc = (originalSrc: string) => {
-    if (originalSrc.includes('/optimized/') && !originalSrc.includes('/webp/')) {
-      const imageName = originalSrc.split('/').pop()
-      if (imageName && (imageName.includes('.png') || imageName.includes('.jpg') || imageName.includes('.jpeg'))) {
-        const webpName = imageName.replace(/\.(png|jpg|jpeg)$/i, '.webp')
-        return `/optimized/webp/${webpName}`
-      }
-    }
-    return originalSrc
-  }
-
-  // Simplify - just use the src directly
-  console.log('BlogImage rendering:', { src, imageError, imageLoaded })
-
+  // The component should return the Image directly, not wrap it in a div.
+  // The passed `className` is merged with the base `object-cover`.
   return (
-    <div className={cn("relative overflow-hidden rounded-lg", className)}>
-      {/* Use regular Image component - Next.js handles optimization */}
-      <Image
-        src={src}
-        alt={alt}
-        fill={fill}
-        width={!fill ? width : undefined}
-        height={!fill ? height : undefined}
-        sizes={sizes}
-        priority={priority}
-                 className="object-cover"
-        quality={85}
-        onLoad={() => setImageLoaded(true)}
-         onError={(e) => {
-           console.error('Image failed to load:', src, e)
-          setImageError(true)
-          setImageLoaded(true)
-        }}
-      />
-    </div>
+    <Image
+      src={src}
+      alt={alt}
+      fill={fill}
+      width={!fill ? width : undefined}
+      height={!fill ? height : undefined}
+      sizes={sizes}
+      priority={priority}
+      className={cn("object-cover", className)}
+      quality={85}
+      // Add a simple error handler in case an image is missing
+      onError={(e) => {
+        e.currentTarget.src = "/placeholder.svg"
+      }}
+    />
   )
 }
 
