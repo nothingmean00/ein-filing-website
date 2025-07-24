@@ -1,7 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Lazy initialization to avoid build-time errors
+const getResendClient = () => {
+  const apiKey = process.env.RESEND_API_KEY;
+  
+  if (!apiKey) {
+    throw new Error('RESEND_API_KEY environment variable is not set');
+  }
+
+  return new Resend(apiKey);
+};
 
 const TO_EMAIL = "support@einnationalfiling.com"
 const FROM_EMAIL = "support@einnationalfiling.com" // Or your verified Resend domain email
@@ -60,14 +69,13 @@ export async function POST(request: NextRequest) {
     `
 
     // Send priority email
-    if (resend) {
-      await resend.emails.send({
-        from: `Priority Support <${FROM_EMAIL}>`,
-        to: [TO_EMAIL],
-        subject: `🚨 PRIORITY: ${subject} - ${name}`,
-        html: emailHtml,
-      })
-    }
+    const resend = getResendClient();
+    await resend.emails.send({
+      from: `Priority Support <${FROM_EMAIL}>`,
+      to: [TO_EMAIL],
+      subject: `🚨 PRIORITY: ${subject} - ${name}`,
+      html: emailHtml,
+    })
 
     return NextResponse.json({ 
       success: true, 
