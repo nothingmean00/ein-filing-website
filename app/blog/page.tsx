@@ -191,12 +191,13 @@ export default function BlogPage() {
               >
                 <CardHeader className="p-0">
                   <Link href={`/blog/${post.slug}`} aria-label={`Read more about ${post.title}`}>
-                    <div className="relative w-full h-56 md:h-64 bg-white p-4">
+                    <div className="relative w-full h-56 md:h-64 bg-white overflow-hidden">
                       <BlogImage
                         src={post.imageUrl || "/placeholder.svg"}
                         alt={post.imageAlt || `Featured image for ${post.title}`}
                         className="transition-transform duration-300 hover:scale-105"
                         priority={false}
+                        fill={true}
                       />
                     </div>
                   </Link>

@@ -40,42 +40,25 @@ const BlogImage = ({
     return originalSrc
   }
 
-  // Use the src as-is since blog data already has correct paths
-  const imageSrc = src
-  const webpSrc = getWebPSrc(imageSrc)
-  
-  // Debug logging
-  console.log('BlogImage rendering:', { src, imageSrc, webpSrc, imageError, imageLoaded })
-  
-  // Also try URL encoding the path for spaces
-  const encodedSrc = encodeURI(imageSrc)
+  // Simplify - just use the src directly
+  console.log('BlogImage rendering:', { src, imageError, imageLoaded })
 
   return (
     <div className={cn("relative overflow-hidden rounded-lg", className)}>
-      {/* Loading placeholder */}
-      {!imageLoaded && !imageError && (
-        <div className="absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center">
-          <div className="text-gray-400 text-sm">Loading...</div>
-        </div>
-      )}
-      
       {/* Use regular Image component - Next.js handles optimization */}
       <Image
-        src={encodedSrc}
+        src={src}
         alt={alt}
         fill={fill}
         width={!fill ? width : undefined}
         height={!fill ? height : undefined}
         sizes={sizes}
         priority={priority}
-        className={cn("object-cover transition-opacity duration-300", {
-          "opacity-0": !imageLoaded && !imageError,
-          "opacity-100": imageLoaded || imageError
-        })}
+                 className="object-cover"
         quality={85}
         onLoad={() => setImageLoaded(true)}
-                 onError={(e) => {
-           console.error('Image failed to load:', imageSrc, 'encoded:', encodedSrc, e)
+         onError={(e) => {
+           console.error('Image failed to load:', src, e)
           setImageError(true)
           setImageLoaded(true)
         }}
