@@ -11,15 +11,24 @@ export const metadata: Metadata = {
   keywords: "EIN confirmation, tax ID payment confirmation, EIN application status",
 }
 
-export default function ConfirmationPage({
+export default async function ConfirmationPage({
   searchParams,
 }: {
-  searchParams: { applicationId?: string; entityType?: string }
+  searchParams: Promise<{ applicationId?: string; entityType?: string; paymentId?: string; tier?: string; price?: string }>
 }) {
+  // Await searchParams to fix Next.js 15 compatibility
+  const params = await searchParams
+  
   // If no application ID is provided, redirect to home
-  if (!searchParams.applicationId) {
+  if (!params.applicationId) {
     redirect("/")
   }
+
+  // Parse pricing information
+  const tierPrice = params.price ? parseInt(params.price) : 249
+  const selectedTier = params.tier || 'standard'
+  const serviceName = selectedTier === 'express' ? 'Express EIN Filing Service' : 'Standard EIN Filing Service'
+  const processingTime = selectedTier === 'express' ? 'Same-day processing' : '24-48 hour processing'
 
   return (
     <main className="min-h-screen">
@@ -45,8 +54,8 @@ export default function ConfirmationPage({
                   <div>
                     <h2 className="text-lg font-semibold text-gray-900 mb-2">Thank You for Your Order</h2>
                     <p className="text-gray-700 mb-4">
-                      We've received your payment of <span className="font-semibold">$249.00</span> and your EIN
-                      application is now being processed. You will receive your EIN typically within 24-48 hours.
+                      We've received your payment of <span className="font-semibold">${tierPrice}.00</span> for {serviceName.toLowerCase()} and your EIN
+                      application is now being processed. You will receive your EIN {processingTime === 'Same-day processing' ? 'the same day if submitted before 1 PM EST' : 'typically within 24-48 hours'}.
                     </p>
                     <div className="bg-white rounded-md p-4 border border-green-100">
                       <h3 className="font-medium text-gray-900 mb-3">Order Details</h3>
@@ -57,11 +66,15 @@ export default function ConfirmationPage({
                         </div>
                         <div className="flex justify-between pb-2 border-b border-gray-100">
                           <span className="text-gray-600">Application ID:</span>
-                          <span className="font-medium">{searchParams.applicationId}</span>
+                          <span className="font-medium">{params.applicationId}</span>
                         </div>
                         <div className="flex justify-between pb-2 border-b border-gray-100">
                           <span className="text-gray-600">Entity Type:</span>
-                          <span className="font-medium">{searchParams.entityType || "Business Entity"}</span>
+                          <span className="font-medium">{params.entityType || "Business Entity"}</span>
+                        </div>
+                        <div className="flex justify-between pb-2 border-b border-gray-100">
+                          <span className="text-gray-600">Service Type:</span>
+                          <span className="font-medium">{serviceName}</span>
                         </div>
                         <div className="flex justify-between pb-2 border-b border-gray-100">
                           <span className="text-gray-600">Date:</span>
@@ -69,7 +82,7 @@ export default function ConfirmationPage({
                         </div>
                         <div className="flex justify-between pb-2 border-b border-gray-100">
                           <span className="text-gray-600">Amount Paid:</span>
-                          <span className="font-medium">$249.00</span>
+                          <span className="font-medium">${tierPrice}.00</span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-600">Payment Status:</span>
@@ -180,9 +193,9 @@ export default function ConfirmationPage({
             orderStatus: "https://schema.org/OrderProcessing",
             acceptedOffer: {
               "@type": "Offer",
-              price: "249.00",
+              price: tierPrice.toString() + ".00",
               priceCurrency: "USD",
-              name: "EIN Filing Service",
+              name: serviceName,
               description: "Professional EIN application filing service",
             },
           }),

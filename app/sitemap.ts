@@ -23,18 +23,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.9,
     },
-    {
-      url: `${baseUrl}/get-ein-fast`, // Secondary landing page
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/federal-tax-id`, // SEO landing page
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
+
     {
       url: `${baseUrl}/faq`, // High-value content page
       lastModified: new Date(),
@@ -108,60 +97,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.8,
     },
-    {
-      url: `${baseUrl}/blog/ein-application-methods-comparison`,
-      lastModified: new Date("2024-12-15"),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/blog/ein-application-rejected-solutions`,
-      lastModified: new Date("2024-12-15"),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
+
     {
       url: `${baseUrl}/blog/business-dissolution-ein-handling`,
       lastModified: new Date("2024-12-15"),
       changeFrequency: "monthly",
       priority: 0.7,
     },
-    {
-      url: `${baseUrl}/blog/business-license-vs-ein-requirements`,
-      lastModified: new Date("2024-12-15"),
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/blog/first-time-entrepreneur-ein-guide`,
-      lastModified: new Date("2024-12-15"),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/blog/ein-vs-itin-vs-ssn-differences`,
-      lastModified: new Date("2024-12-15"),
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/blog/dba-vs-ein-requirements`,
-      lastModified: new Date("2024-12-15"),
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/blog/how-to-apply-for-ein-online-complete-guide`,
-      lastModified: new Date("2024-12-15"),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/blog/get-ein-same-day-fast-track-guide`,
-      lastModified: new Date("2024-12-15"),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
+
     {
       url: `${baseUrl}/blog/ein-vs-federal-tax-id-difference`,
       lastModified: new Date("2024-12-15"),
@@ -180,36 +123,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.8,
     },
-    {
-      url: `${baseUrl}/blog/california-ein-requirements`,
-      lastModified: new Date("2024-12-15"),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/blog/new-york-ein-application`,
-      lastModified: new Date("2024-12-15"),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/blog/end-of-year-ein-applications`,
-      lastModified: new Date("2024-12-15"),
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/blog/ein-application-errors`,
-      lastModified: new Date("2024-12-15"),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/blog/ein-for-business-acquisition`,
-      lastModified: new Date("2024-12-15"),
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
+
   ]
 
   return [...mainPages, ...entityPages, ...entityInfoPages, ...blogPosts]

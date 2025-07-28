@@ -12,15 +12,24 @@ export const metadata: Metadata = {
   keywords: "EIN payment, tax ID application payment, business filing payment, secure payment",
 }
 
-export default function PaymentPage({
+export default async function PaymentPage({
   searchParams,
 }: {
-  searchParams: { applicationId?: string; entityType?: string }
+  searchParams: Promise<{ applicationId?: string; entityType?: string; tier?: string; price?: string }>
 }) {
+  // Await searchParams to fix Next.js 15 compatibility
+  const params = await searchParams
+  
   // If no application ID is provided, redirect to home
-  if (!searchParams.applicationId) {
+  if (!params.applicationId) {
     redirect("/")
   }
+
+  // Parse pricing information
+  const selectedTier = params.tier || 'standard'
+  const tierPrice = params.price ? parseInt(params.price) : 249
+  const serviceName = selectedTier === 'express' ? 'Express EIN Filing Service' : 'Standard EIN Filing Service'
+  const processingTime = selectedTier === 'express' ? 'Same-day processing' : '24-48 hour processing'
 
   const breadcrumbItems = [
     { label: "Home", href: "/" },
@@ -47,9 +56,9 @@ export default function PaymentPage({
                 <div className="p-6">
                   <h2 className="text-xl font-semibold mb-6">Payment Details</h2>
                   <StripePaymentForm 
-                    applicationId={searchParams.applicationId} 
-                    entityType={searchParams.entityType}
-                    amount={249}
+                    applicationId={params.applicationId} 
+                    entityType={params.entityType}
+                    amount={tierPrice}
                   />
                 </div>
               </div>
@@ -62,19 +71,22 @@ export default function PaymentPage({
                   <div className="space-y-3">
                     <div className="flex justify-between pb-3 border-b border-gray-100">
                       <span className="text-gray-600">Application ID</span>
-                      <span className="font-medium">{searchParams.applicationId}</span>
+                      <span className="font-medium">{params.applicationId}</span>
                     </div>
                     <div className="flex justify-between pb-3 border-b border-gray-100">
                       <span className="text-gray-600">Entity Type</span>
-                      <span className="font-medium">{searchParams.entityType || "Business Entity"}</span>
+                      <span className="font-medium">{params.entityType || "Business Entity"}</span>
                     </div>
                     <div className="flex justify-between pb-3 border-b border-gray-100">
-                      <span className="text-gray-600">EIN Filing Service</span>
-                      <span className="font-medium">$249.00</span>
+                      <div className="flex flex-col">
+                        <span className="text-gray-600">{serviceName}</span>
+                        <span className="text-xs text-gray-500">{processingTime}</span>
+                      </div>
+                      <span className="font-medium">${tierPrice}.00</span>
                     </div>
                     <div className="flex justify-between font-semibold text-lg pt-2">
                       <span>Total</span>
-                      <span className="text-primary">$249.00</span>
+                      <span className="text-primary">${tierPrice}.00</span>
                     </div>
                   </div>
                 </div>

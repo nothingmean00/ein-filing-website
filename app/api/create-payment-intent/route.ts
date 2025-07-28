@@ -16,7 +16,7 @@ const getStripeClient = () => {
 
 export async function POST(req: NextRequest) {
   try {
-    const { amount, applicationId, entityType, customerEmail } = await req.json()
+    const { amount, applicationId, entityType, customerEmail, serviceTier } = await req.json()
 
     // Get Stripe client with lazy initialization
     const stripe = getStripeClient();
@@ -29,6 +29,7 @@ export async function POST(req: NextRequest) {
         applicationId,
         entityType,
         customerEmail: customerEmail || '',
+        serviceTier: serviceTier || 'standard',
       },
     })
 

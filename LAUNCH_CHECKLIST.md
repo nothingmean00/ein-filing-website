@@ -18,7 +18,7 @@
   ```
 - [ ] Test payment flow with test card: 4242 4242 4242 4242
 - [ ] Set up webhook endpoint in Stripe dashboard:
-  - URL: `https://yourdomain.com/api/webhooks/stripe`
+  - URL: `https://einnationalfiling.com/api/webhooks/stripe`
   - Events: `payment_intent.succeeded`, `payment_intent.payment_failed`
 - [ ] Add `STRIPE_WEBHOOK_SECRET` to `.env.local`
 
@@ -93,7 +93,7 @@
 4. File customer info for records
 
 ### 3. Customer Service
-- [ ] Set up support email: support@yourdomain.com
+- [ ] Set up support email: support@einnationalfiling.com
 - [ ] Create FAQ responses
 - [ ] Prepare status update templates
 - [ ] Set expectations for response times

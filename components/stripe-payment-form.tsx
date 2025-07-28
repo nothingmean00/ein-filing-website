@@ -44,6 +44,7 @@ function CheckoutForm({ applicationId, entityType, amount }: StripePaymentFormPr
           applicationId,
           entityType,
           customerEmail: 'customer@example.com', // Will be populated from form data
+          serviceTier: amount === 329 ? 'express' : 'standard',
         }),
       })
 
@@ -67,7 +68,8 @@ function CheckoutForm({ applicationId, entityType, amount }: StripePaymentFormPr
         setIsSubmitting(false)
       } else if (paymentIntent.status === 'succeeded') {
         // Payment successful - redirect to confirmation
-        router.push(`/confirmation?applicationId=${applicationId}&entityType=${entityType || ""}&paymentId=${paymentIntent.id}`)
+        const tier = amount === 329 ? 'express' : 'standard'
+        router.push(`/confirmation?applicationId=${applicationId}&entityType=${entityType || ""}&paymentId=${paymentIntent.id}&tier=${tier}&price=${amount}`)
       }
     } catch (err: any) {
       setError(err.message || 'An unexpected error occurred')

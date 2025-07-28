@@ -25,6 +25,7 @@ import { useRouter } from "next/navigation"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Textarea } from "@/components/ui/textarea"
+import PricingTierSelector from "@/components/pricing-tier-selector"
 
 interface ApplicationFormProps {
   entityType: EntityType
@@ -33,9 +34,10 @@ interface ApplicationFormProps {
 export default function ApplicationForm({ entityType }: ApplicationFormProps) {
   const router = useRouter()
   const [step, setStep] = useState(1)
-  const totalSteps = 4
+  const totalSteps = 5  // Increased to include pricing tier selection
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [selectedTier, setSelectedTier] = useState<{id: string, name: string, price: number} | null>(null)
   const [formData, setFormData] = useState({
     // Basic Business Information
     businessName: "",
@@ -292,6 +294,12 @@ export default function ApplicationForm({ entityType }: ApplicationFormProps) {
     }
 
     if (currentStep === 4) {
+      if (!selectedTier) {
+        newErrors.pricingTier = "Please select a service level"
+      }
+    }
+
+    if (currentStep === 5) {
       if (!formData.agreeToTerms) {
         newErrors.agreeToTerms = "You must agree to the terms"
       }
@@ -324,7 +332,9 @@ export default function ApplicationForm({ entityType }: ApplicationFormProps) {
       setTimeout(() => {
         setIsSubmitting(false)
         // Redirect to payment page instead of showing confirmation
-        router.push(`/payment?applicationId=EIN-${Date.now().toString().slice(-6)}&entityType=${entityType.name}`)
+        const applicationId = `EIN-${Date.now().toString().slice(-6)}`
+        const tierParam = selectedTier ? `&tier=${selectedTier.id}&price=${selectedTier.price}` : ''
+        router.push(`/payment?applicationId=${applicationId}&entityType=${entityType.name}${tierParam}`)
       }, 1500)
     }
   }
@@ -522,7 +532,7 @@ export default function ApplicationForm({ entityType }: ApplicationFormProps) {
                     {step > i + 1 ? <CheckCircle className="h-5 w-5" /> : <span>{i + 1}</span>}
                   </div>
                   <span className={`text-xs ${step === i + 1 ? "text-primary font-medium" : "text-gray-500"}`}>
-                    {i === 0 ? "Business" : i === 1 ? "Contact" : i === 2 ? "Details" : "Review"}
+                    {i === 0 ? "Business" : i === 1 ? "Contact" : i === 2 ? "Details" : i === 3 ? "Pricing" : "Review"}
                   </span>
                 </div>
               ))}
@@ -1519,6 +1529,38 @@ export default function ApplicationForm({ entityType }: ApplicationFormProps) {
                   <div className="bg-blue-50 p-4 rounded-md border border-blue-100 mb-6">
                     <div className="flex">
                       <div className="mr-3 mt-0.5">
+                        <CreditCard className="h-5 w-5 text-primary" />
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-900">Service Level</h4>
+                        <p className="text-sm text-gray-600">
+                          Choose the processing speed that works best for your timeline.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <PricingTierSelector 
+                    selectedTier={selectedTier?.id}
+                    onTierSelect={(tier) => setSelectedTier(tier)}
+                  />
+                  
+                  {errors.pricingTier && (
+                    <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
+                      <p className="text-red-600 text-sm flex items-center">
+                        <AlertCircle className="h-4 w-4 mr-2" />
+                        {errors.pricingTier}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {step === 5 && (
+                <div className="space-y-6">
+                  <div className="bg-blue-50 p-4 rounded-md border border-blue-100 mb-6">
+                    <div className="flex">
+                      <div className="mr-3 mt-0.5">
                         <CheckCircle className="h-5 w-5 text-primary" />
                       </div>
                       <div>
@@ -1610,6 +1652,33 @@ export default function ApplicationForm({ entityType }: ApplicationFormProps) {
 
                   <div className="bg-gray-50 p-5 rounded-md border border-gray-200 mb-6">
                     <h5 className="font-medium text-gray-900 mb-4 flex items-center">
+                      <CreditCard className="h-4 w-4 mr-2 text-gray-500" />
+                      Selected Service
+                    </h5>
+                    <div className="space-y-3 text-sm">
+                      <div className="flex justify-between pb-2 border-b border-gray-200">
+                        <span className="text-gray-500">Service Type:</span>
+                        <span className="font-medium text-gray-900">
+                          {selectedTier?.name || "Standard Filing"}
+                        </span>
+                      </div>
+                      <div className="flex justify-between pb-2 border-b border-gray-200">
+                        <span className="text-gray-500">Processing Time:</span>
+                        <span className="font-medium text-gray-900">
+                          {selectedTier?.id === 'express' ? 'Same-day processing' : '24-48 hour processing'}
+                        </span>
+                      </div>
+                      <div className="flex justify-between pb-2 border-b border-gray-200">
+                        <span className="text-gray-500">Price:</span>
+                        <span className="font-medium text-gray-900">
+                          ${selectedTier?.price || 249}.00
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-gray-50 p-5 rounded-md border border-gray-200 mb-6">
+                    <h5 className="font-medium text-gray-900 mb-4 flex items-center">
                       <FileText className="h-4 w-4 mr-2 text-gray-500" />
                       Business Details
                     </h5>
@@ -1695,22 +1764,7 @@ export default function ApplicationForm({ entityType }: ApplicationFormProps) {
                     </div>
                   </div>
 
-                  <div className="bg-gray-50 p-5 rounded-md border border-gray-200 mb-6">
-                    <h5 className="font-medium text-gray-900 mb-4 flex items-center">
-                      <CreditCard className="h-4 w-4 mr-2 text-gray-500" />
-                      Service Fee
-                    </h5>
-                    <div className="space-y-3 text-sm">
-                      <div className="flex justify-between pb-2 border-b border-gray-200">
-                        <span className="text-gray-500">EIN Filing Service:</span>
-                        <span className="font-medium text-gray-900">$249.00</span>
-                      </div>
-                      <div className="flex justify-between pt-2 font-medium">
-                        <span className="text-gray-900">Total:</span>
-                        <span className="text-primary">$249.00</span>
-                      </div>
-                    </div>
-                  </div>
+
 
                   <div className="mt-4">
                     <div className="flex items-start">

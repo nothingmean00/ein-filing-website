@@ -6,13 +6,14 @@ import type { Metadata, ResolvingMetadata } from "next"
 import Script from "next/script"
 
 interface ApplicationPageProps {
-  params: {
+  params: Promise<{
     entityType: string
-  }
+  }>
 }
 
 export async function generateMetadata({ params }: ApplicationPageProps, parent: ResolvingMetadata): Promise<Metadata> {
-  const entityType = getEntityTypeBySlug(params.entityType)
+  const resolvedParams = await params
+  const entityType = getEntityTypeBySlug(resolvedParams.entityType)
 
   if (!entityType) {
     return {
@@ -33,13 +34,14 @@ export async function generateMetadata({ params }: ApplicationPageProps, parent:
       images: previousImages,
     },
     alternates: {
-      canonical: `https://einnationalfiling.com/apply/${params.entityType}`,
+      canonical: `https://einnationalfiling.com/apply/${resolvedParams.entityType}`,
     },
   }
 }
 
-export default function ApplicationPage({ params }: ApplicationPageProps) {
-  const entityType = getEntityTypeBySlug(params.entityType)
+export default async function ApplicationPage({ params }: ApplicationPageProps) {
+  const resolvedParams = await params
+  const entityType = getEntityTypeBySlug(resolvedParams.entityType)
 
   if (!entityType) {
     notFound()
@@ -48,7 +50,7 @@ export default function ApplicationPage({ params }: ApplicationPageProps) {
   const breadcrumbItems = [
     { label: "Home", href: "/" },
     { label: "EIN Filing", href: "/#entity-types" },
-    { label: `${entityType.name} Application`, href: `/apply/${params.entityType}`, current: true },
+    { label: `${entityType.name} Application`, href: `/apply/${resolvedParams.entityType}`, current: true },
   ]
 
   return (
@@ -84,7 +86,7 @@ export default function ApplicationPage({ params }: ApplicationPageProps) {
                 "@type": "ListItem",
                 position: 3,
                 name: `${entityType.name} Application`,
-                item: `https://einnationalfiling.com/apply/${params.entityType}`,
+                item: `https://einnationalfiling.com/apply/${resolvedParams.entityType}`,
               },
             ],
           }),

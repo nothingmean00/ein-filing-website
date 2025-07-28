@@ -26,7 +26,7 @@ RESEND_API_KEY=re_YOUR_RESEND_KEY_HERE
 ## 4. Set Up Webhooks
 1. In Stripe dashboard, go to **Developers** > **Webhooks**
 2. Click **Add endpoint**
-3. Endpoint URL: `https://yourdomain.com/api/webhooks/stripe`
+3. Endpoint URL: `https://einnationalfiling.com/api/webhooks/stripe`
 4. Select events: `payment_intent.succeeded`
 5. Copy the webhook signing secret (starts with `whsec_`)
 
