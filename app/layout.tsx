@@ -5,6 +5,7 @@ import "./globals.css"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 import { ModalProvider } from "@/components/modal-provider"
+import PerformanceMonitor from "@/components/performance-monitor"
 import { Suspense } from "react"
 import Script from "next/script"
 import ChatButton from "@/components/chat/chat-button"
@@ -111,6 +112,12 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         
+        {/* Preconnect to critical external services */}
+        <link rel="preconnect" href="https://api.stripe.com" />
+        <link rel="preconnect" href="https://js.stripe.com" />
+        <link rel="preconnect" href="https://api.openai.com" />
+        <link rel="preconnect" href="https://api.resend.com" />
+        
         {/* DNS prefetch for performance */}
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
@@ -119,6 +126,8 @@ export default function RootLayout({
         <link rel="preload" as="image" href="/logo.png" />
         <link rel="preload" as="image" href="/optimized/logo.png" type="image/png" />
         <link rel="preload" as="image" href="/optimized/webp/logo.webp" type="image/webp" />
+        
+        {/* Preload critical fonts - Next.js will handle this automatically with Inter font import */}
         
         {/* Optimize for Core Web Vitals */}
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -161,6 +170,9 @@ export default function RootLayout({
             <ChatButton />
           </div>
         </ModalProvider>
+        
+        {/* Performance monitoring */}
+        <PerformanceMonitor />
 
         {/* Enhanced Structured Data for Organization */}
         <Script

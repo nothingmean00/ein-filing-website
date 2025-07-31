@@ -7,6 +7,18 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: false,
   },
+  // Performance optimizations
+  compiler: {
+    // Remove console logs in production
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
+  // Enable modern JavaScript output
+  experimental: {
+    // Use modern JavaScript for supported browsers
+    esmExternals: true,
+    // Enable scroll restoration
+    scrollRestoration: true,
+  },
   // Add comprehensive security headers
   async headers() {
     return [
@@ -66,26 +78,55 @@ const nextConfig = {
     // STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY,
     // SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
   },
-  // Add webpack configuration to handle chunk loading issues
+  // Add webpack configuration for performance optimization
   webpack: (config, { dev, isServer }) => {
-    if (dev && !isServer) {
-      config.optimization.splitChunks = {
-        chunks: 'all',
-        cacheGroups: {
-          default: {
-            minChunks: 1,
-            priority: -20,
-            reuseExistingChunk: true,
-          },
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name: 'vendors',
-            priority: -10,
-            chunks: 'all',
-          },
+    // Optimize bundle splitting for better caching
+    config.optimization.splitChunks = {
+      chunks: 'all',
+      minSize: 20000,
+      maxSize: 244000,
+      cacheGroups: {
+        default: {
+          minChunks: 1,
+          priority: -20,
+          reuseExistingChunk: true,
         },
-      };
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          priority: -10,
+          chunks: 'all',
+        },
+        // Separate Stripe bundle
+        stripe: {
+          test: /[\\/]node_modules[\\/](@stripe|stripe)[\\/]/,
+          name: 'stripe',
+          priority: 10,
+          chunks: 'all',
+        },
+        // Separate React bundle
+        react: {
+          test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+          name: 'react',
+          priority: 10,
+          chunks: 'all',
+        },
+        // Separate UI components
+        ui: {
+          test: /[\\/]node_modules[\\/](@radix-ui|lucide-react)[\\/]/,
+          name: 'ui',
+          priority: 5,
+          chunks: 'all',
+        },
+      },
+    };
+
+    // Tree shaking optimization
+    if (!dev) {
+      config.optimization.usedExports = true;
+      config.optimization.sideEffects = false;
     }
+
     return config;
   },
 };
