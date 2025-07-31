@@ -125,18 +125,20 @@ export default function RootLayout({
         <meta name="format-detection" content="telephone=no" />
 
         {/* Favicon and Apple Touch Icons */}
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="icon" href="/favicon-16x16.svg" sizes="16x16" type="image/svg+xml" />
+        <link rel="icon" href="/favicon-32x32.svg" sizes="32x32" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.svg" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.svg" />
+        {/* Fallback ICO for older browsers */}
         <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png" />
-        <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         
         {/* Manifest for PWA */}
         <link rel="manifest" href="/site.webmanifest" />
         
         {/* Theme color for mobile browsers */}
-        <meta name="theme-color" content="#1e40af" />
-        <meta name="msapplication-TileColor" content="#1e40af" />
+        <meta name="theme-color" content="#004b87" />
+        <meta name="msapplication-TileColor" content="#004b87" />
         
         {/* Additional security and performance meta tags */}
         <meta name="referrer" content="origin-when-cross-origin" />

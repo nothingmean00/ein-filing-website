@@ -8,13 +8,14 @@ import FaqSection from "@/components/faq-section"
 import SupportSection from "@/components/support-section"
 
 interface EntityPageProps {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
 export async function generateMetadata({ params }: EntityPageProps, parent: ResolvingMetadata): Promise<Metadata> {
-  const entityType = getEntityTypeBySlug(params.slug)
+  const { slug } = await params
+  const entityType = getEntityTypeBySlug(slug)
 
   if (!entityType) {
     return {
@@ -35,13 +36,14 @@ export async function generateMetadata({ params }: EntityPageProps, parent: Reso
       images: previousImages,
     },
     alternates: {
-      canonical: `https://einnationalfiling.com/entity-types/${params.slug}`,
+      canonical: `https://einnationalfiling.com/entity-types/${slug}`,
     },
   }
 }
 
-export default function EntityPage({ params }: EntityPageProps) {
-  const entityType = getEntityTypeBySlug(params.slug)
+export default async function EntityPage({ params }: EntityPageProps) {
+  const { slug } = await params
+  const entityType = getEntityTypeBySlug(slug)
 
   if (!entityType) {
     notFound()
@@ -50,7 +52,7 @@ export default function EntityPage({ params }: EntityPageProps) {
   const breadcrumbItems = [
     { label: "Home", href: "/" },
     { label: "Entity Types", href: "/#entity-definitions" },
-    { label: entityType.name, href: `/entity-types/${params.slug}`, current: true },
+    { label: entityType.name, href: `/entity-types/${slug}`, current: true },
   ]
 
   return (
@@ -91,7 +93,7 @@ export default function EntityPage({ params }: EntityPageProps) {
                 "@type": "ListItem",
                 position: 3,
                 name: entityType.name,
-                item: `https://einnationalfiling.com/entity-types/${params.slug}`,
+                item: `https://einnationalfiling.com/entity-types/${slug}`,
               },
             ],
           }),

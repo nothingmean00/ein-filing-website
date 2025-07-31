@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180">
+  <defs>
+    <linearGradient id="bgApple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#004b87;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0066b3;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Rounded rectangle background for Apple -->
+  <rect x="0" y="0" width="180" height="180" rx="40" fill="url(#bgApple)"/>
+  
+  <!-- Document/Form icon - larger for touch icon -->
+  <rect x="45" y="35" width="90" height="110" rx="8" fill="#ffffff"/>
+  <rect x="45" y="35" width="90" height="16" rx="8" fill="#e5f3f8"/>
+  
+  <!-- EIN text representation -->
+  <rect x="55" y="60" width="22" height="8" fill="#004b87"/>
+  <rect x="82" y="60" width="12" height="8" fill="#004b87"/>
+  <rect x="99" y="60" width="22" height="8" fill="#004b87"/>
+  
+  <!-- Tax ID number lines -->
+  <rect x="55" y="78" width="45" height="5" fill="#666666"/>
+  <rect x="55" y="90" width="65" height="5" fill="#666666"/>
+  <rect x="55" y="102" width="35" height="5" fill="#666666"/>
+  <rect x="55" y="114" width="55" height="5" fill="#666666"/>
+  
+  <!-- Federal eagle silhouette - larger -->
+  <path d="M90 125 L80 130 L85 140 L90 135 L95 140 L100 130 Z" fill="#004b87"/>
+  
+  <!-- Additional professional elements -->
+  <circle cx="90" cy="155" r="3" fill="#004b87"/>
+</svg>

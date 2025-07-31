@@ -5,23 +5,29 @@
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#1e40af",
+  "theme_color": "#004b87",
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/favicon-16x16.png",
+      "src": "/favicon-16x16.svg",
       "sizes": "16x16",
-      "type": "image/png"
+      "type": "image/svg+xml"
     },
     {
-      "src": "/favicon-32x32.png",
+      "src": "/favicon-32x32.svg",
       "sizes": "32x32",
-      "type": "image/png"
+      "type": "image/svg+xml"
     },
     {
-      "src": "/apple-touch-icon.png",
+      "src": "/apple-touch-icon.svg",
       "sizes": "180x180",
-      "type": "image/png"
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
     }
   ],
   "lang": "en-US",
@@ -33,14 +39,14 @@
       "short_name": "Apply",
       "description": "Start your EIN application",
       "url": "/apply",
-      "icons": [{ "src": "/favicon-32x32.png", "sizes": "32x32" }]
+      "icons": [{ "src": "/favicon-32x32.svg", "sizes": "32x32" }]
     },
     {
       "name": "Pricing",
       "short_name": "Pricing",
       "description": "View our pricing options",
       "url": "/pricing",
-      "icons": [{ "src": "/favicon-32x32.png", "sizes": "32x32" }]
+      "icons": [{ "src": "/favicon-32x32.svg", "sizes": "32x32" }]
     }
   ]
 } 

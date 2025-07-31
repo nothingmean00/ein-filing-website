@@ -23,7 +23,7 @@ export default function ContactPageClient() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submissionStatus, setSubmissionStatus] = useState<"idle" | "success" | "error">("idle")
   const [submissionMessage, setSubmissionMessage] = useState("")
-  const [isPriorityModalOpen, setIsPriorityModalOpen] = useState(false)
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -235,20 +235,20 @@ export default function ContactPageClient() {
                 <p className="text-gray-700 text-sm mb-4">
                   For urgent inquiries about your EIN application, please use our priority support channel.
                 </p>
-                <Button
-                  variant="outline"
-                  className="w-full flex items-center justify-center"
-                  onClick={() => setIsPriorityModalOpen(true)}
-                >
-                  <AlertTriangle className="h-4 w-4 mr-2 text-yellow-500" />
-                  Request Priority Support
-                </Button>
+                <PrioritySupportModal>
+                  <Button
+                    variant="outline"
+                    className="w-full flex items-center justify-center"
+                  >
+                    <AlertTriangle className="h-4 w-4 mr-2 text-yellow-500" />
+                    Request Priority Support
+                  </Button>
+                </PrioritySupportModal>
               </div>
             </div>
           </div>
         </div>
       </section>
-      <PrioritySupportModal isOpen={isPriorityModalOpen} onClose={() => setIsPriorityModalOpen(false)} />
     </main>
   )
 }
