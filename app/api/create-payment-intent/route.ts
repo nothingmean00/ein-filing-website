@@ -11,9 +11,7 @@ const getStripeClient = () => {
     throw new Error('STRIPE_SECRET_KEY environment variable is not set');
   }
 
-  return new Stripe(secretKey, {
-    apiVersion: '2025-06-30.basil',
-  });
+  return new Stripe(secretKey);
 };
 
 // Initialize rate limiter
