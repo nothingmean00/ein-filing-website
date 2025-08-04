@@ -39,17 +39,17 @@ export const createChatRateLimit = () => {
     return new Ratelimit({
       redis: {
         sadd: async () => 0,
-        eval: async () => [1, 20, Date.now() + 60000],
-        evalsha: async () => [1, 20, Date.now() + 60000],
+        eval: async () => [1, 100, Date.now() + 60000],
+        evalsha: async () => [1, 100, Date.now() + 60000],
       } as any,
-      limiter: Ratelimit.slidingWindow(20, '1 m'), // 20 chat messages per minute
+      limiter: Ratelimit.slidingWindow(100, '1 m'), // 100 chat messages per minute
       analytics: false,
     })
   }
 
   return new Ratelimit({
     redis,
-    limiter: Ratelimit.slidingWindow(20, '1 m'), // 20 chat messages per minute
+    limiter: Ratelimit.slidingWindow(100, '1 m'), // 100 chat messages per minute
     analytics: true,
   })
 }

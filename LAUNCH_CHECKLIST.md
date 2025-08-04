@@ -3,9 +3,9 @@
 ## ✅ Pre-Launch Setup
 
 ### 1. Email Setup (Resend)
-- [ ] Sign up for Resend account
-- [ ] Verify your domain (optional but recommended)
-- [ ] Add `RESEND_API_KEY` to `.env.local`
+- [x] Sign up for Resend account
+- [x] Verify your domain (optional but recommended)
+- [x] Add `RESEND_API_KEY` to `.env.local`
 - [ ] Test email sending from contact form
 
 ### 2. Payment Setup (Stripe)

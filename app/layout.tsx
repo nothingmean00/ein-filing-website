@@ -9,6 +9,7 @@ import PerformanceMonitor from "@/components/performance-monitor"
 import { Suspense } from "react"
 import Script from "next/script"
 import ChatButton from "@/components/chat/chat-button"
+import { Analytics } from "@vercel/analytics/next"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -122,8 +123,7 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         
-        {/* Resource hints for better performance */}
-        <link rel="preload" as="image" href="/logo.png" />
+        {/* Resource hints for better performance - only preload critical above-the-fold images */}
         <link rel="preload" as="image" href="/optimized/logo.png" type="image/png" />
         <link rel="preload" as="image" href="/optimized/webp/logo.webp" type="image/webp" />
         
@@ -173,6 +173,9 @@ export default function RootLayout({
         
         {/* Performance monitoring */}
         <PerformanceMonitor />
+        
+        {/* Vercel Analytics */}
+        <Analytics />
 
         {/* Enhanced Structured Data for Organization */}
         <Script
