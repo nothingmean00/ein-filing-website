@@ -19,17 +19,17 @@ export const createPaymentRateLimit = () => {
     return new Ratelimit({
       redis: {
         sadd: async () => 0,
-        eval: async () => [1, 5, Date.now() + 60000],
-        evalsha: async () => [1, 5, Date.now() + 60000],
+        eval: async () => [1, 50, Date.now() + 60000],
+        evalsha: async () => [1, 50, Date.now() + 60000],
       } as any,
-      limiter: Ratelimit.slidingWindow(5, '1 m'), // 5 requests per minute
+      limiter: Ratelimit.slidingWindow(50, '1 m'), // 50 requests per minute
       analytics: false, // Disable analytics for in-memory
     })
   }
 
   return new Ratelimit({
     redis,
-    limiter: Ratelimit.slidingWindow(5, '1 m'), // 5 payment attempts per minute
+    limiter: Ratelimit.slidingWindow(50, '1 m'), // 50 payment attempts per minute
     analytics: true,
   })
 }
