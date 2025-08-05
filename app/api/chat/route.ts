@@ -12,28 +12,26 @@ const chatRateLimit = createChatRateLimit()
 
 export async function POST(req: Request) {
   try {
-    // Temporarily disable rate limiting for chat until Redis is properly configured
-    // The in-memory fallback doesn't work correctly in serverless functions
-    // TODO: Set up Upstash Redis for proper rate limiting
-    // const rateLimitResult = await rateLimit(req, chatRateLimit)
+    // Apply rate limiting
+    const rateLimitResult = await rateLimit(req, chatRateLimit)
     
-    // if (rateLimitResult && !rateLimitResult.success) {
-    //   return new Response(
-    //     JSON.stringify({ 
-    //       error: 'Too many chat requests. Please slow down.',
-    //       retryAfter: Math.ceil((rateLimitResult.reset.getTime() - Date.now()) / 1000)
-    //     }),
-    //     { 
-    //       status: 429, 
-    //       headers: { 
-    //         'Content-Type': 'application/json',
-    //         'X-RateLimit-Limit': rateLimitResult.limit.toString(),
-    //         'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
-    //         'X-RateLimit-Reset': rateLimitResult.reset.toISOString(),
-    //       } 
-    //     }
-    //   )
-    // }
+    if (rateLimitResult && !rateLimitResult.success) {
+      return new Response(
+        JSON.stringify({ 
+          error: 'Too many chat requests. Please slow down.',
+          retryAfter: Math.ceil((rateLimitResult.reset.getTime() - Date.now()) / 1000)
+        }),
+        { 
+          status: 429, 
+          headers: { 
+            'Content-Type': 'application/json',
+            'X-RateLimit-Limit': rateLimitResult.limit.toString(),
+            'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
+            'X-RateLimit-Reset': rateLimitResult.reset.toISOString(),
+          } 
+        }
+      )
+    }
 
     // Parse and validate request body
     const body = await req.json()
