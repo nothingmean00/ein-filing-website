@@ -20,7 +20,7 @@ const getResendClient = () => {
 };
 
 const FROM_EMAIL = 'notifications@einnationalfiling.com'
-const TO_EMAIL = 'applications@einnationalfiling.com'
+const TO_EMAIL = 'support@einnationalfiling.com'
 
 export async function POST(req: NextRequest) {
   try {
