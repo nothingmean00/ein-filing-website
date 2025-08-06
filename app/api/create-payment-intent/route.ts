@@ -58,20 +58,10 @@ export async function POST(req: NextRequest) {
       },
     })
 
-    // Include rate limit headers in successful response
-    const responseHeaders: Record<string, string> = {}
-    if (rateLimitResult) {
-      responseHeaders['X-RateLimit-Limit'] = rateLimitResult.limit.toString()
-      responseHeaders['X-RateLimit-Remaining'] = rateLimitResult.remaining.toString()
-      responseHeaders['X-RateLimit-Reset'] = rateLimitResult.reset.toISOString()
-    }
-
-    return NextResponse.json(
-      {
-        clientSecret: paymentIntent.client_secret,
-      },
-      { headers: responseHeaders }
-    )
+    // Rate limiting disabled - return success without headers
+    return NextResponse.json({
+      clientSecret: paymentIntent.client_secret,
+    })
   } catch (err: any) {
     console.error('Payment intent creation error:', err)
     
