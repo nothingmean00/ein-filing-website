@@ -37,7 +37,11 @@ export default function ApplicationForm({ entityType }: ApplicationFormProps) {
   const totalSteps = 5  // Increased to include pricing tier selection
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
-  const [selectedTier, setSelectedTier] = useState<{id: string, name: string, price: number} | null>(null)
+  const [selectedTier, setSelectedTier] = useState<{id: string, name: string, price: number} | null>({
+    id: "standard",
+    name: "Standard Filing", 
+    price: 249
+  })
   const [formData, setFormData] = useState({
     // Basic Business Information
     businessName: "",
@@ -294,7 +298,7 @@ export default function ApplicationForm({ entityType }: ApplicationFormProps) {
     }
 
     if (currentStep === 4) {
-      if (!selectedTier) {
+      if (!selectedTier || !selectedTier.id) {
         newErrors.pricingTier = "Please select a service level"
       }
     }

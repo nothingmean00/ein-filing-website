@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { CheckCircle, Clock, Zap } from "lucide-react"
 
@@ -55,6 +55,16 @@ const tiers: PricingTier[] = [
 
 export default function PricingTierSelector({ selectedTier, onTierSelect }: PricingTierSelectorProps) {
   const [selected, setSelected] = useState<string>(selectedTier || "standard")
+
+  // Auto-select standard tier on component mount if no tier is selected
+  useEffect(() => {
+    if (!selectedTier) {
+      const standardTier = tiers.find(tier => tier.id === "standard")
+      if (standardTier) {
+        onTierSelect(standardTier)
+      }
+    }
+  }, [selectedTier, onTierSelect])
 
   const handleTierSelect = (tier: PricingTier) => {
     setSelected(tier.id)
