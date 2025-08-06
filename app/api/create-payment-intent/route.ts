@@ -21,6 +21,10 @@ export async function POST(req: NextRequest) {
   try {
     // Rate limiting completely disabled for testing - TEMP FIX
     console.log('Payment API called at:', new Date().toISOString());
+    
+    // Debug environment variables
+    console.log('STRIPE_SECRET_KEY exists:', !!process.env.STRIPE_SECRET_KEY);
+    console.log('STRIPE_SECRET_KEY starts with sk_:', process.env.STRIPE_SECRET_KEY?.startsWith('sk_'));
 
     // Parse and validate request body
     const body = await req.json()
@@ -63,7 +67,13 @@ export async function POST(req: NextRequest) {
       clientSecret: paymentIntent.client_secret,
     })
   } catch (err: any) {
-    console.error('Payment intent creation error:', err)
+    console.error('Payment intent creation error:', {
+      message: err.message,
+      stack: err.stack,
+      type: err.constructor.name,
+      code: err.code,
+      statusCode: err.statusCode
+    })
     
     // Don't expose internal error details to client
     const errorMessage = err.message?.includes('Stripe') 
