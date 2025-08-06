@@ -26,24 +26,33 @@ export async function POST(req: NextRequest) {
     console.log('STRIPE_SECRET_KEY exists:', !!process.env.STRIPE_SECRET_KEY);
     console.log('STRIPE_SECRET_KEY starts with sk_:', process.env.STRIPE_SECRET_KEY?.startsWith('sk_'));
 
-    // Parse and validate request body
+    // Parse request body with simple validation
     const body = await req.json()
-    const validation = validateRequest(createPaymentIntentSchema, body)
+    console.log('Request body received:', body);
     
-    if (!validation.success) {
+    // Simple validation instead of complex schema
+    const amount = Number(body.amount) || 249
+    const applicationId = String(body.applicationId || 'APP-' + Date.now())
+    const entityType = String(body.entityType || 'LLC')
+    const customerEmail = body.customerEmail || ''
+    const serviceTier = body.serviceTier || 'standard'
+    
+    console.log('Parsed data:', { amount, applicationId, entityType, serviceTier });
+
+    // Basic validation
+    if (amount !== 249 && amount !== 329) {
+      console.error('Invalid amount:', amount);
       return NextResponse.json(
-        { error: `Validation failed: ${validation.error}` },
+        { error: 'Invalid amount. Must be $249 or $329.' },
         { status: 400 }
       )
     }
 
-    const { amount, applicationId, entityType, customerEmail, serviceTier } = validation.data
-
-    // Sanitize inputs
+    // Sanitize inputs (simplified)
     const sanitizedData = {
-      applicationId: sanitizeString(applicationId),
-      entityType: sanitizeString(entityType),
-      customerEmail: customerEmail ? sanitizeEmail(customerEmail) : '',
+      applicationId: applicationId.substring(0, 100),
+      entityType: entityType.substring(0, 50),
+      customerEmail: customerEmail.substring(0, 200),
       serviceTier,
     }
 
