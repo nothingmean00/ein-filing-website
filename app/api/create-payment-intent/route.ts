@@ -19,40 +19,44 @@ const paymentRateLimit = createPaymentRateLimit()
 
 export async function POST(req: NextRequest) {
   try {
-    // Rate limiting completely disabled for testing - TEMP FIX
-    console.log('Payment API called at:', new Date().toISOString());
+    // Apply rate limiting (temporarily disabled for testing)
+    // const rateLimitResult = await rateLimit(req, paymentRateLimit)
     
-    // Debug environment variables
-    console.log('STRIPE_SECRET_KEY exists:', !!process.env.STRIPE_SECRET_KEY);
-    console.log('STRIPE_SECRET_KEY starts with sk_:', process.env.STRIPE_SECRET_KEY?.startsWith('sk_'));
+    // if (rateLimitResult && !rateLimitResult.success) {
+    //   return NextResponse.json(
+    //     { 
+    //       error: 'Too many payment attempts. Please try again later.',
+    //       retryAfter: Math.ceil((rateLimitResult.reset.getTime() - Date.now()) / 1000)
+    //     },
+    //     { 
+    //       status: 429,
+    //       headers: {
+    //         'X-RateLimit-Limit': rateLimitResult.limit.toString(),
+    //         'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
+    //         'X-RateLimit-Reset': rateLimitResult.reset.toISOString(),
+    //       }
+    //     }
+    //   )
+    // }
 
-    // Parse request body with simple validation
+    // Parse and validate request body
     const body = await req.json()
-    console.log('Request body received:', body);
+    const validation = validateRequest(createPaymentIntentSchema, body)
     
-    // Simple validation instead of complex schema
-    const amount = Number(body.amount) || 249
-    const applicationId = String(body.applicationId || 'APP-' + Date.now())
-    const entityType = String(body.entityType || 'LLC')
-    const customerEmail = body.customerEmail || ''
-    const serviceTier = body.serviceTier || 'standard'
-    
-    console.log('Parsed data:', { amount, applicationId, entityType, serviceTier });
-
-    // Basic validation
-    if (amount !== 249 && amount !== 329) {
-      console.error('Invalid amount:', amount);
+    if (!validation.success) {
       return NextResponse.json(
-        { error: 'Invalid amount. Must be $249 or $329.' },
+        { error: `Validation failed: ${validation.error}` },
         { status: 400 }
       )
     }
 
-    // Sanitize inputs (simplified)
+    const { amount, applicationId, entityType, customerEmail, serviceTier } = validation.data
+
+    // Sanitize inputs
     const sanitizedData = {
-      applicationId: applicationId.substring(0, 100),
-      entityType: entityType.substring(0, 50),
-      customerEmail: customerEmail.substring(0, 200),
+      applicationId: sanitizeString(applicationId),
+      entityType: sanitizeString(entityType),
+      customerEmail: customerEmail ? sanitizeEmail(customerEmail) : '',
       serviceTier,
     }
 
@@ -71,18 +75,22 @@ export async function POST(req: NextRequest) {
       },
     })
 
-    // Rate limiting disabled - return success without headers
-    return NextResponse.json({
-      clientSecret: paymentIntent.client_secret,
-    })
+    // Include rate limit headers in successful response
+    const responseHeaders: Record<string, string> = {}
+    if (rateLimitResult) {
+      responseHeaders['X-RateLimit-Limit'] = rateLimitResult.limit.toString()
+      responseHeaders['X-RateLimit-Remaining'] = rateLimitResult.remaining.toString()
+      responseHeaders['X-RateLimit-Reset'] = rateLimitResult.reset.toISOString()
+    }
+
+    return NextResponse.json(
+      {
+        clientSecret: paymentIntent.client_secret,
+      },
+      { headers: responseHeaders }
+    )
   } catch (err: any) {
-    console.error('Payment intent creation error:', {
-      message: err.message,
-      stack: err.stack,
-      type: err.constructor.name,
-      code: err.code,
-      statusCode: err.statusCode
-    })
+    console.error('Payment intent creation error:', err)
     
     // Don't expose internal error details to client
     const errorMessage = err.message?.includes('Stripe') 

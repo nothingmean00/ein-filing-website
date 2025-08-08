@@ -133,14 +133,14 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <meta name="format-detection" content="telephone=no" />
 
-        {/* Favicon and Apple Touch Icons with cache busting */}
-        <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml" />
-        <link rel="icon" href="/favicon-16x16.svg?v=2" sizes="16x16" type="image/svg+xml" />
-        <link rel="icon" href="/favicon-32x32.svg?v=2" sizes="32x32" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.svg?v=2" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.svg?v=2" />
+        {/* Favicon and Apple Touch Icons */}
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="icon" href="/favicon-16x16.svg" sizes="16x16" type="image/svg+xml" />
+        <link rel="icon" href="/favicon-32x32.svg" sizes="32x32" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.svg" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.svg" />
         {/* Fallback ICO for older browsers */}
-        <link rel="icon" href="/favicon.ico?v=2" sizes="any" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
         
         {/* Manifest for PWA */}
         <link rel="manifest" href="/site.webmanifest" />
